@@ -56,7 +56,10 @@ sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             <div class="note-footer">
                 <button type="button" class="close" aria-label="Delete">
                     <span aria-hidden="true" class="fa fa-trash-o text-danger"></span>
-                </button>            
+                </button>
+<button type="button" class="btn btn-primary" aria-label="Save">
+                    Save
+                </button>                
             </div>
           </div>
           <div class="note">
@@ -110,7 +113,37 @@ sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     </footer>
     <script>
       (function () {
+      	let myTargetNode = document.querySelector(".btn.btn-primary");
+      	myTargetNode.addEventListener("click", function (e) {
+      		e.preventDefault();
+      		addNoteDiv();
+      	});
+
+      	function addNoteDiv() {
+      		let myNode = document.querySelector(".note");
+      		let myCloneNode = myNode.cloneNode(true);
+            myCloneNode.querySelector(".btn.btn-primary").addEventListener("click", function () {
+                let myNoteText = myCloneNode.querySelector(".note-text").textContent;
+                console.log(myNoteText);
+                addNote(myNoteText);
+            });
+      		let row = document.querySelector(".row");
+      		row.append(myCloneNode);
+      	}
         
+      	function addNote(myNote) {
+      		let oReq = new XMLHttpRequest();
+      		oReq.open("POST", "api/notes");
+      		oReq.setRequestHeader("Content-Type", "application/json");
+      		oReq.onload = function () {
+      			console.log(oReq.responseText);
+      		};
+      		let noteObject = {
+      			note: myNote
+      		};
+      		let payload = JSON.stringify(noteObject);
+      		oReq.send(payload);
+      	}
       })();
     </script>
   </body>
